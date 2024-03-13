@@ -5,7 +5,7 @@ This project showcases the implementation of an Employee Management System using
 The EmployeeController class handles HTTP requests and interfaces with the database through the EmployeeRepository.
  
 # Key functionalities include:
-<li><b>Create Record:</b> Add a new employee record to the database.</li>
+<li><b>Create Record:</b> Add a new employee record to the database.</li> 
 <li><b>Get All Records:</b> Retrieve all employee records from the database.</li>
 <li><b>Get One Record:</b> Retrieve a specific employee record by providing the employee ID or employee number.</li>
 <li><b>Update Record:</b> Update an existing employee record in the database.</li>
