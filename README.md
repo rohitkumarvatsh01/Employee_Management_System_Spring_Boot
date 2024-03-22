@@ -1,7 +1,7 @@
 # Employee Management System with CRUD Operations using Spring Boot 
 This project showcases the implementation of an Employee Management System using Spring Boot, providing CRUD (Create, Read, Update, Delete) operations to efficiently manage employee records. 
 
-# Overview 
+# Overview
 The EmployeeController class handles HTTP requests and interfaces with the database through the EmployeeRepository. 
  
 # Key functionalities include:
