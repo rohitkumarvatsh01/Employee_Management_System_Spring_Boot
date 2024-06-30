@@ -1,8 +1,10 @@
 package com.employeemanagement.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,37 +27,42 @@ public class EmployeeController {
 
     // Create a new record in the table.
     @PostMapping("/post")
-    public String createNewRecord(@RequestBody Employee employee) {
-        return employeeService.createNewRecord(employee);
+    public ResponseEntity<Employee> createNewRecord(@RequestBody Employee employee) {
+        Employee result = employeeService.createNewRecord(employee);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Retrieve all records from the database.
     @GetMapping("/get")
     public ResponseEntity<List<Employee>> getAllRecords() {
-        return employeeService.getAllRecords();
+        return new ResponseEntity<>(employeeService.getAllRecords(), HttpStatus.OK);
     }
 
     // Retrieve a record from the database by ID.
     @GetMapping("/get/{empid}")
-    public ResponseEntity<Employee> getRecordById(@PathVariable long empid) {
-        return employeeService.getRecordById(empid);
+    public ResponseEntity<Employee>getRecordById(@PathVariable Long empid){
+    	Employee result = employeeService.getRecordById(empid);
+    	return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    
     // Update a record in the table by ID.
     @PutMapping("/put/{empid}")
-    public String updateById(@PathVariable long empid, @RequestBody Employee employee) {
-        return employeeService.updateById(empid, employee);
+    public ResponseEntity<Employee> updateById(@PathVariable long empid, @RequestBody Employee employee) {
+        Employee result = employeeService.updateById(empid, employee);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Delete a record from the table by ID.
     @DeleteMapping("/delete/{empid}")
-    public String deleteById(@PathVariable long empid) {
-        return employeeService.deleteById(empid);
+    public ResponseEntity<String> deleteById(@PathVariable long empid) {
+        String result = employeeService.deleteById(empid);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Delete all records from the table.
     @DeleteMapping("/delete")
-    public String deleteAllRecords() {
-        return employeeService.deleteAllRecords();
+    public ResponseEntity<String> deleteAllRecords() {
+        String result = employeeService.deleteAllRecords();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
