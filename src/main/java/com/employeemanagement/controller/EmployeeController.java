@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employeemanagement.model.Employee;
+import com.employeemanagement.service.EmployeeExcelService;
 import com.employeemanagement.service.EmployeeService;
 
 @RestController
@@ -24,6 +26,18 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+    
+    
+    @Autowired
+    private EmployeeExcelService employeeExcelService;
+    
+    //Create a new record in the table from fetching excel sheet.
+    @PostMapping("/upload")
+    public ResponseEntity<String> createNewRecordFromExcel(@RequestParam("filePath") String file){
+    	employeeExcelService.createNewRecordFromExcel(file);
+    	String result="Employees imported successfully!";
+    	return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 
     // Create a new record in the table.
     @PostMapping("/post")
