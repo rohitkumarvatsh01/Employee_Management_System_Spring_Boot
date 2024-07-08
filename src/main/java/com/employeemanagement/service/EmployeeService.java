@@ -4,9 +4,9 @@ import com.employeemanagement.exception.EmployeeNotFoundException;
 import com.employeemanagement.exception.InvalidEmployeeDataException;
 import com.employeemanagement.model.Employee;
 import com.employeemanagement.repository.EmployeeRepository;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,41 +14,47 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
+    
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     // Create a new record in the table.    
     public Employee createNewRecord(Employee employee) {
-    	if(employee.getEmp_name()!=null && employee.getEmp_age()>18 && employee.getEmp_salary()>999 && employee.getEmp_city()!=null) {
-    		return employeeRepository.save(employee);
-    	}
-    	else {
-    		throw new InvalidEmployeeDataException("Employee Data is Not Correct Format");
-    	}
+        if (employee.getEmp_name() != null && employee.getEmp_age() > 18 && employee.getEmp_salary() > 999 && employee.getEmp_city() != null) {
+            logger.info("Adding new employee: {}", employee);
+            return employeeRepository.save(employee);
+        } else {
+            logger.warn("Invalid employee data: {}", employee);
+            throw new InvalidEmployeeDataException("Employee data is not in correct format");
+        }
     }
 
     // Retrieve all records from the database.       
-    public List<Employee>getAllRecords(){
-    	List<Employee>list=employeeRepository.findAll();
-    	
-    	if(list.isEmpty()) {
-    		throw new EmployeeNotFoundException("No Any Employee Record Found");
-    	}
-    	else {
-    		return list;
-    	}
+    public List<Employee> getAllRecords() {
+        List<Employee> list = employeeRepository.findAll();
+        
+        if (list.isEmpty()) {
+            logger.info("No employee records found");
+            throw new EmployeeNotFoundException("No employee records found");
+        } else {
+            logger.info("Retrieved all employee records");
+            return list;
+        }
     }
 
     // Retrieve a record from the database by ID.
-    public Employee getRecordById(long empid){
-    	Optional<Employee>optionalEmployee=employeeRepository.findById(empid);
-    	if(optionalEmployee.isPresent()) {
-    		return optionalEmployee.get();
-    	}
-    	else {
-    		throw new EmployeeNotFoundException("Employee Not Found with Empid "+empid);
-    	}
+    public Employee getRecordById(long empid) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(empid);
+        
+        if (optionalEmployee.isPresent()) {
+            logger.info("Employee found with ID: {}", empid);
+            return optionalEmployee.get();
+        } else {
+            logger.warn("Employee not found with ID: {}", empid);
+            throw new EmployeeNotFoundException("Employee not found with ID " + empid);
+        }
     }
 
     // Update a record in the table by ID.    
@@ -58,36 +64,40 @@ public class EmployeeService {
         if (optionalEmployee.isPresent()) {
             Employee existEmp = optionalEmployee.get();
             existEmp.setEmp_name(employee.getEmp_name());
-            existEmp.setEmp_salary(employee.getEmp_salary());
             existEmp.setEmp_age(employee.getEmp_age());
+            existEmp.setEmp_salary(employee.getEmp_salary());
             existEmp.setEmp_city(employee.getEmp_city());
+            logger.info("Updated employee with ID: {}", empid);
             return employeeRepository.save(existEmp);
         } else {
-        	throw new EmployeeNotFoundException("Employee Not Found with Empid "+empid);
+            logger.warn("Employee not found with ID: {}", empid);
+            throw new EmployeeNotFoundException("Employee not found with ID " + empid);
         }
     }
 
     // Delete a record from the table by ID.
     public String deleteById(long empid) {
-    	Optional<Employee>optionalEmployee=employeeRepository.findById(empid);
-        if(optionalEmployee.isPresent()) {
-        	employeeRepository.deleteById(empid);
-        	return "Employee empid "+empid+" is Deleted";
-        }
-        else {
-        	throw new EmployeeNotFoundException("Employee Not Found with Empid "+empid);
+        Optional<Employee> optionalEmployee = employeeRepository.findById(empid);
+        if (optionalEmployee.isPresent()) {
+            employeeRepository.deleteById(empid);
+            logger.info("Deleted employee with ID: {}", empid);
+            return "Employee with ID " + empid + " is deleted";
+        } else {
+            logger.warn("Employee not found with ID: {}", empid);
+            throw new EmployeeNotFoundException("Employee not found with ID " + empid);
         }
     }
 
     // Delete all records from the table.
     public String deleteAllRecords() {
-    	List<Employee>list=employeeRepository.findAll();
-    	if(list.isEmpty()) {
-    		throw new EmployeeNotFoundException("No Any Employee Record Found");
-    	}
-    	else {
-    		employeeRepository.deleteAll();
-    		return "All Records are Deleted";
-    	}
+        List<Employee> list = employeeRepository.findAll();
+        if (list.isEmpty()) {
+            logger.info("No employee records found to delete");
+            throw new EmployeeNotFoundException("No employee records found to delete");
+        } else {
+            employeeRepository.deleteAll();
+            logger.info("Deleted all employee records");
+            return "All employee records are deleted";
+        }
     }
 }

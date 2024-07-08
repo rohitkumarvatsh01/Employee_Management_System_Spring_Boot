@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.employeemanagement.model.Employee;
 import com.employeemanagement.service.EmployeeExcelService;
 import com.employeemanagement.service.EmployeeService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
@@ -33,10 +34,9 @@ public class EmployeeController {
     
     //Create a new record in the table from fetching excel sheet.
     @PostMapping("/upload")
-    public ResponseEntity<String> createNewRecordFromExcel(@RequestParam("filePath") String file){
-    	employeeExcelService.createNewRecordFromExcel(file);
-    	String result="Employees imported successfully!";
-    	return new ResponseEntity<>(result, HttpStatus.CREATED);
+    public ResponseEntity<String> saveDataFromExcel(@RequestParam("file") MultipartFile file) {
+        String result = employeeExcelService.saveDataFromExcel(file);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Create a new record in the table.
