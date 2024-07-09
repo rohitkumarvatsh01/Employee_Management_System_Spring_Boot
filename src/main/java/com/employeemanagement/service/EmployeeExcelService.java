@@ -86,10 +86,20 @@ public class EmployeeExcelService {
     }
 
     private void validateEmployeeData(Employee employee) {
-        if (employee.getEmp_name() != null || employee.getEmp_age() > 18 || employee.getEmp_salary() > 999 || employee.getEmp_city() != null) {
-            throw new InvalidEmployeeDataException("Employee data validation failed: " + employee);
+        if (employee.getEmp_name() == null || employee.getEmp_name().isEmpty()) {
+            throw new InvalidEmployeeDataException("Employee name is invalid: " + employee);
+        }
+        if (employee.getEmp_age() <= 18) {
+            throw new InvalidEmployeeDataException("Employee age is invalid: " + employee);
+        }
+        if (employee.getEmp_salary() <= 999) {
+            throw new InvalidEmployeeDataException("Employee salary is invalid: " + employee);
+        }
+        if (employee.getEmp_city() == null || employee.getEmp_city().isEmpty()) {
+            throw new InvalidEmployeeDataException("Employee city is invalid: " + employee);
         }
     }
+
 
     private Workbook getWorkbook(MultipartFile file, InputStream is) throws Exception {
         if (file.getOriginalFilename().endsWith(".xlsx")) {

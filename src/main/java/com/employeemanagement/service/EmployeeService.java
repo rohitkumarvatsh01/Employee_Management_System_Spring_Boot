@@ -20,16 +20,33 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // Create a new record in the table.    
+    // Create a new record in the table.
     public Employee createNewRecord(Employee employee) {
-        if (employee.getEmp_name() != null && employee.getEmp_age() > 18 && employee.getEmp_salary() > 999 && employee.getEmp_city() != null) {
-            logger.info("Adding new employee: {}", employee);
-            return employeeRepository.save(employee);
-        } else {
-            logger.warn("Invalid employee data: {}", employee);
-            throw new InvalidEmployeeDataException("Employee data is not in correct format");
+        validateEmployeeData(employee);
+        logger.info("Adding new employee: {}", employee);
+        return employeeRepository.save(employee);
+    }
+
+    // Validate employee data
+    private void validateEmployeeData(Employee employee) {
+        if (employee.getEmp_name() == null || employee.getEmp_name().isEmpty()) {
+            logger.warn("Invalid employee name: {}", employee.getEmp_name());
+            throw new InvalidEmployeeDataException("Employee name is invalid");
+        }
+        if (employee.getEmp_age() <= 18) {
+            logger.warn("Invalid employee age: {}", employee.getEmp_age());
+            throw new InvalidEmployeeDataException("Employee age must be greater than 18");
+        }
+        if (employee.getEmp_salary() <= 999) {
+            logger.warn("Invalid employee salary: {}", employee.getEmp_salary());
+            throw new InvalidEmployeeDataException("Employee salary must be greater than 999");
+        }
+        if (employee.getEmp_city() == null || employee.getEmp_city().isEmpty()) {
+            logger.warn("Invalid employee city: {}", employee.getEmp_city());
+            throw new InvalidEmployeeDataException("Employee city is invalid");
         }
     }
+
 
     // Retrieve all records from the database.       
     public List<Employee> getAllRecords() {
