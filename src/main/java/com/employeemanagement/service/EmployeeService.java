@@ -84,6 +84,7 @@ public class EmployeeService {
             existEmp.setEmp_age(employee.getEmp_age());
             existEmp.setEmp_salary(employee.getEmp_salary());
             existEmp.setEmp_city(employee.getEmp_city());
+            validateEmployeeData(existEmp);
             logger.info("Updated employee with ID: {}", empid);
             return employeeRepository.save(existEmp);
         } else {
